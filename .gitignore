@@ -28,3 +28,12 @@ deployment/configurations/
 
 release/
 *~
+
+# AAMS — Agent workspace artifacts
+WORKING/LOGS/*
+!WORKING/LOGS/.gitkeep
+WORKING/WORKPAPER/*.tmp
+WORKING/AGENT-MEMORY/*
+!WORKING/AGENT-MEMORY/.gitkeep
+WORKING/MEMORY/*.db
+WORKING/MEMORY/chroma/

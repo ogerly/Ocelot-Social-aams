@@ -1,0 +1,144 @@
+{
+  "_spec": "AAMS-MINI/1.0",
+  "_doc": "Minimal Agent Bootstrap Contract for Ocelot-Social. Any agent reading this file MUST create the workspace structure below if it does not exist. Idempotent: safe to read multiple times.",
+  "_source": "https://github.com/DEVmatrose/AAMS",
+
+  "project": {
+    "name": "ocelot-social",
+    "version": "3.15.1",
+    "description": "Free and open-source social network platform — Vue/Nuxt frontend, GraphQL/Apollo backend, Neo4j graph database.",
+    "repository": "https://github.com/Ocelot-Social-Community/Ocelot-Social",
+    "license": "MIT",
+    "stack": {
+      "frontend": "Vue.js 2 + Nuxt.js (SSR)",
+      "backend": "Node.js + Apollo Server 4 + GraphQL",
+      "database": "Neo4j (graph database, bolt protocol)",
+      "testing": "Jest (unit) + Cypress/Cucumber (E2E) + Storybook (visual)",
+      "infrastructure": "Docker Compose, Kubernetes/Helm",
+      "package_manager": "yarn",
+      "ci": "GitHub Actions"
+    },
+    "topology": {
+      "backend/": "GraphQL Apollo server, Neo4j driver, email service, file uploads, JWT auth",
+      "webapp/": "Nuxt.js SSR frontend, Vue components, Vuex store, Apollo client",
+      "cypress/": "E2E tests with Cucumber/Gherkin feature files",
+      "packages/ui/": "Shared UI component library (@ocelot-social/ui)",
+      "styleguide/": "Storybook-based component styleguide",
+      "neo4j/": "Database Dockerfile and config",
+      "deployment/": "Helm charts and deployment values",
+      "scripts/": "Release and translation scripts"
+    }
+  },
+
+  "workspace": {
+    "root": "./WORKING",
+    "entry_point": "./READ-AGENT.md",
+
+    "structure": {
+      "_doc": "Agent creates these folders on first read. Never deletes. Never overwrites existing content.",
+      "whitepapers": "./WORKING/WHITEPAPER",
+      "workpapers": "./WORKING/WORKPAPER",
+      "workpapers_closed": "./WORKING/WORKPAPER/closed",
+      "memory": "./WORKING/MEMORY",
+      "ltm_store": "./WORKING/AGENT-MEMORY",
+      "diary": "./WORKING/DIARY",
+      "logs": "./WORKING/LOGS",
+      "guidelines": "./WORKING/GUIDELINES",
+      "tools": "./WORKING/TOOLS"
+    },
+
+    "documentation_model": {
+      "_doc": "Four-layer documentation model. Every agent working in this repo MUST follow this.",
+      "workpaper": {
+        "purpose": "Session- and task-scoped working documents. Created at session start, closed at session end.",
+        "naming": "{date}-{agent}-{topic}.md",
+        "location": "./WORKING/WORKPAPER/",
+        "on_close": "move to ./WORKING/WORKPAPER/closed/"
+      },
+      "whitepaper": {
+        "purpose": "Stable architecture and system truth. Written once, updated on structural decisions only.",
+        "location": "./WORKING/WHITEPAPER/",
+        "on_close": "stays — never moved"
+      },
+      "diary": {
+        "purpose": "Temporal context layer. Chronological decision log — why we decided what. Monthly files, max 10 lines per entry.",
+        "naming": "{YYYY}-{MM}.md",
+        "location": "./WORKING/DIARY/",
+        "on_close": "stays — never moved"
+      },
+      "memory": {
+        "purpose": "Long-term context store. Persists cross-session knowledge, changes, decisions.",
+        "location": "./WORKING/MEMORY/",
+        "on_close": "ingest workpaper before closing session"
+      }
+    },
+
+    "bootstrap_rules": {
+      "idempotent": true,
+      "create_if_missing": true,
+      "never_delete": true,
+      "on_entry_point_missing": "create READ-AGENT.md with project scan summary",
+      "agents_md": "create AGENTS.md if missing — bridges AAMS to Copilot, Cursor, Claude Code, Codex, Windsurf and all AGENTS.md-compatible tools",
+      "ltm_markdown_threshold": 100,
+      "ltm_warning_at": 90,
+      "ltm_exceeded_behavior": "load_last_20_only",
+      "ltm_mode": "markdown",
+      "_ltm_mode_doc": "'markdown' = ltm-index.md only, zero dependencies, works everywhere. 'vector' = ChromaDB + Python required. Default: 'markdown'. Switch to 'vector' once Python env is set up.",
+      "ltm_store": "./WORKING/AGENT-MEMORY",
+      "ltm_audit_log": "./WORKING/MEMORY/ltm-index.md"
+    },
+
+    "secrets_policy": {
+      "never_in_workpapers": true,
+      "never_in_whitepapers": true,
+      "never_in_memory": true,
+      "never_in_manifest": true,
+      "use": ".env or external secret manager only"
+    },
+
+    "gitignore_patterns": {
+      "_note": "WORKING/MEMORY/ is intentionally NOT ignored — ltm-index.md is the shared collaboration artifact. Only binary/runtime artifacts are excluded.",
+      "always": [
+        "WORKING/LOGS/*",
+        "!WORKING/LOGS/.gitkeep",
+        "WORKING/WORKPAPER/*.tmp"
+      ],
+      "when_using_vector_store": [
+        "WORKING/AGENT-MEMORY/*",
+        "!WORKING/AGENT-MEMORY/.gitkeep",
+        "WORKING/MEMORY/*.db",
+        "WORKING/MEMORY/chroma/"
+      ]
+    }
+  },
+
+  "agent_contract": {
+    "_doc": "Behavioral contract every agent MUST honor when working in this repository.",
+    "on_first_entry": [
+      "1. Read READ-AGENT.md (if exists)",
+      "2. Create all workspace.structure folders if missing",
+      "3. Scan repository → write first workpaper with sections: session_goal, repository_inventory (file tree + status), key_findings (from README + docs), open_questions, file_protocol, next_steps",
+      "4. Create READ-AGENT.md if missing",
+      "5. Index existing documentation into memory"
+    ],
+    "first_workpaper_sections": [
+      "session_goal",
+      "repository_inventory",
+      "key_findings",
+      "open_questions",
+      "file_protocol",
+      "next_steps"
+    ],
+    "on_session_start": [
+      "1. Read READ-AGENT.md",
+      "2. Query memory for session topic",
+      "3. Open or create workpaper for this session"
+    ],
+    "on_session_end": [
+      "1. Complete workpaper (file protocol, decisions, next steps)",
+      "2. Ingest workpaper into memory",
+      "3. Move workpaper to closed/",
+      "4. Update READ-AGENT.md if architecture changed"
+    ]
+  }
+}
