@@ -58,12 +58,33 @@ WORKING/
 
 ---
 
+## Nächste Schritte — Von Analyse zu Code
+
+> Ab hier beginnen die tatsächlichen Code-Änderungen.
+
+Die AAMS-Analysephase ist abgeschlossen. Die Workpapers liefern konkrete Upgrade-Pläne (5 Phasen, 12–18 Wochen), die jetzt umgesetzt werden.
+
+**Eigene Codebase statt Fork:** Wir erwägen den Wechsel von einem Fork zu einem eigenständigen Repository. Der Grund: In einem Fork ist jede Änderung an den Upstream-PR/Review/Merge-Zyklus gebunden — das bremst. Eine eigene Codebase ermöglicht schnelles, eigenverantwortliches Arbeiten, während die Upstream-Kompatibilität über gezielte Cherry-Picks erhalten bleibt.
+
+### Workpapers als Issues — Agenten-Workflow
+
+Jedes Workpaper in `WORKING/WORKPAPER/` kann direkt als [GitHub Issue](https://github.com/ogerly/Ocelot-Social-aams/issues) angelegt werden. KI-Agenten können diese Issues übernehmen und im AAMS-Verfahren bearbeiten:
+
+1. **Issue erstellen** — Workpaper-Inhalt wird zum Issue-Body (Aufgabe, Kontext, Akzeptanzkriterien)
+2. **Agent übernimmt** — Liest `READ-AGENT.md`, erstellt ein Workpaper, arbeitet den Plan ab
+3. **Session-Protokoll** — Alle Entscheidungen werden im Diary dokumentiert, Ergebnisse ins LTM übernommen
+4. **Issue schließen** — Mit Verweis auf das geschlossene Workpaper und die geänderten Dateien
+
+So entsteht ein nachvollziehbarer, automatisierbarer Entwicklungszyklus — vom Analyseergebnis über den Issue-Tracker bis zur Umsetzung durch Mensch oder Agent.
+
+---
+
 ## Schnellstart
 
 ```bash
 # Repository klonen
-git clone https://github.com/YOUR-FORK/Ocelot-Social.git
-cd Ocelot-Social
+git clone https://github.com/ogerly/Ocelot-Social-aams.git
+cd Ocelot-Social-aams
 
 # AAMS-Dokumentation lesen
 cat WORKING/WHITEPAPER/INDEX.md          # Übersicht aller Whitepapers
